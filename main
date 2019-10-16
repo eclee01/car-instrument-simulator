@@ -1,0 +1,160 @@
+#include <iostream>
+
+class Odometer;
+
+class FuelGauge {
+    private:
+        int gallons;
+    public:
+        FuelGauge()
+        { gallons = 0; }
+        
+        void setGallons(int g)
+        { gallons = g; }
+        
+        int getGallons()
+        { return gallons; }
+        
+        FuelGauge operator++(int)
+        { if (gallons < 15)
+            gallons++; }
+        
+        FuelGauge operator--(int)
+        { if (gallons > 0)
+            gallons--; }
+            
+        void addMileage(int, Odometer&);
+};
+
+class Odometer {
+    private:
+        int mileage;
+    public:
+        Odometer ()
+        { mileage = 0; }
+        
+        void setMileage(int m)
+        { mileage = m; }
+        
+        int getMileage()
+        { return mileage; }
+        
+        friend void FuelGauge::addMileage(int, Odometer&);
+        
+        Odometer operator++(int)
+        { if (mileage < 999999)
+            mileage++;
+          else
+            mileage = 0; }
+};
+
+void FuelGauge::addMileage(int a, Odometer& o) {
+    for (int i = 0; i < a; i++) {
+        o++;
+    }
+}
+
+void display();
+
+int main()
+{
+    FuelGauge benzGauge, priusGauge;
+    Odometer benzOdometer, priusOdometer;
+    int choice;
+    
+    std::cout << "MERCEDES BENZ & TOYOTA PRIUS COMPARATOR\n";
+    
+    while (choice != 5) {
+        display();
+        std::cin >> choice;
+        int car;
+        
+        if (choice > 0 && choice < 4) {
+            std::cout << "Which car?\n1. Benz\n2. Prius\n";
+            std::cin >> car;
+            
+            if (choice == 1) {
+                if (car == 1) {
+                    int choice1;
+                    std::cout << "Benz: " << benzGauge.getGallons() << " gal\n";
+                    std::cout << "1. Set gal\n2. Increment gal\n3. Decrement gal\n";
+                    std::cin >> choice1;
+                    
+                    if (choice1 == 1) {
+                        int gals;
+                        std::cout << "Enter gallons to set to: ";
+                        std::cin >> gals;
+                        benzGauge.setGallons(gals);
+                    }
+                    else if (choice1 == 2) {
+                        benzGauge++;
+                    }
+                    else if (choice1 == 3) {
+                        benzGauge--;
+                    }
+                }
+                else if (car == 2) {
+                    int choice1;
+                    std::cout << "Prius: " << priusGauge.getGallons() << " gal\n";
+                    std::cout << "1. Set gal\n2. Increment gal\n3. Decrement gal\n";
+                    std::cin >> choice1;
+                    
+                    if (choice1 == 1) {
+                        int gals;
+                        std::cout << "Enter gallons to set to: ";
+                        std::cin >> gals;
+                        priusGauge.setGallons(gals);
+                    }
+                    else if (choice1 == 2) {
+                        priusGauge++;
+                    }
+                    else if (choice1 == 3) {
+                        priusGauge--;
+                    }
+                    
+                    std::cout << "Prius: " << priusGauge.getGallons() << " gal\n";
+                }
+            }
+            else if (choice == 2) {
+                if (car == 1) {
+                    std::cout << "Benz mileage: " << benzOdometer.getMileage() << " mi\n";
+                }
+                else if (car == 2) {
+                    std::cout << "Prius mileage: " << priusGauge.getGallons() << " gal\n";
+                }
+            }
+            else if (choice == 3) {
+                if (car == 1) {
+                    std::cout << "Driving Benz... using one gallon...\n";
+                    benzGauge--;
+                    benzGauge.addMileage(18, benzOdometer);
+                }
+                else if (car == 2) {
+                    std::cout << "Driving Prius... using one gallon...\n";
+                    priusGauge--;
+                    priusGauge.addMileage(52, priusOdometer);
+                }
+            }
+        }
+        
+        if (choice == 4) {
+            std::cout << "Benz Stats:\n";
+            std::cout << "Gas: " << benzGauge.getGallons() << " gal\n";
+            std::cout << "Mileage: " << benzOdometer.getMileage() << " mi\n";
+            std::cout << "Fuel economy: 18 combined mpg\n";
+            std::cout << "Prius Stats:\n";
+            std::cout << "Gas: " << priusGauge.getGallons() << " gal\n";
+            std::cout << "Mileage: " << priusOdometer.getMileage() << " mi\n";
+            std::cout << "Fuel economy: ~52 combined mpg\n";
+        }
+    }
+    
+    std::cout << "\nThanks for using MERCEDES BENZ & TOYOTA PRIUS COMPARATOR\n";
+
+    return 0;
+}
+
+void display() {
+    std::cout << "\n1. Gallons\n2. Mileage\n3. Drive\n4. Stats";
+    std::cout << "\n5. Quit\n";
+}
